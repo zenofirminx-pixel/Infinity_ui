@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Infinity</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+
+<meta name="theme-color" content="#000">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="msapplication-navbutton-color" content="#000">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preload" href="icon-static.png" as="image">
+
+<style>
+/* CSS Existant et ajustements globaux */
+header .btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: 1px solid #444;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 12px;
+  z-index: 1001;
+  cursor: pointer;
+}
+header .btn:active { opacity: 0.7; }
+#historyBtn { left: 16px; }
+#settingsBtn { right: 16px; }
+
+/* RESTRUCTURATION DES PARAMÈTRES (STYLE MODERNE) */
+.settings-section { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid #222; }
+.settings-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.settings-section h3 { margin: 0 0 14px 0; font-size: 14px; color: #0A84FF; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.setting-item { margin-bottom: 16px; list-style: none; }
+.setting-item:last-child { margin-bottom: 0; }
+.setting-item label { display: block; font-size: 13px; color: #aaa; margin-bottom: 8px; font-weight: 500; }
+
+/* Inputs et Selects modernes */
+.setting-select, .setting-input {
+  width: 100%;
+  padding: 12px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.setting-select:focus, .setting-input:focus { border-color: #0A84FF; }
+
+.info-text { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px; color: #fff; font-size: 14px; line-height: 1.5; }
+.info-text a { color: #0A84FF; text-decoration: none; }
+.info-text a:hover { text-decoration: underline; }
+
+/* Boutons d'action des paramètres */
+.settings-action-btn {
+  width: 100%;
+  padding: 12px;
+  background: #222;
+  border: 1px solid #333;
+  color: #fff;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: all 0.2s;
+}
+.settings-action-btn:hover { background: #2a2a2a; border-color: #444; }
+
+/* STYLE DES CONDITIONS D'UTILISATION (INTEGRATION DESIGN CHATinfinity) */
+#termsScreen {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 5000;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+#termsContent {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+#termsScreen h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #fff;
+  letter-spacing: -0.5px;
+  text-align: left;
+}
+.subtitle {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #1a1a1a;
+  text-align: left;
+}
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #8ab4f8;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+}
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 24px;
+  background: #8ab4f8;
+  border-radius: 2px;
+}
+.content-block {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+.content-block h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 12px;
+}
+.content-block p {
+  font-size: 15px;
+  color: #ccc;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+.content-block p:last-child {
+  margin-bottom: 0;
+}
+.content-block ul {
+  list-style: none;
+  padding-left: 0;
+}
+.content-block ul li {
+  font-size: 15px;
+  color: #ccc;
+  padding: 8px 0 8px 28px;
+  position: relative;
+  line-height: 1.6;
+}
+.content-block ul li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: #8ab4f8;
+  font-weight: 700;
+}
+.highlight {
+  color: #8ab4f8;
+  font-weight: 600;
+}
+.warning-box {
+  background: #1a0a0a;
+  border: 1px solid #2a1515;
+  border-left: 3px solid #ff6b6b;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+}
+.warning-box p {
+  color: #ff9999;
+  font-size: 14px;
+  margin: 0;
+}
+.info-box {
+  background: #0a0f1a;
+  border: 1px solid #1a1f2a;
+  border-left: 3px solid #8ab4f8;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+}
+.info-box p {
+  color: #a8b5d1;
+  font-size: 14px;
+  margin: 0;
+}
+.terms-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  color: #fff;
+}
+.terms-check input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+#continueBtn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 14px;
+  background: #444;
+  color: #888;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: not-allowed;
+}
+#continueBtn.active { background: #0A84FF; color: #fff; cursor: pointer; }
+#continueBtn.loading .btn-text { opacity: 0; position: absolute; }
+#continueBtn .loader {
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #fff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+#continueBtn.loading .loader { display: block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.send-btn {
+  width: 40px;
+  height: 40px;
+  background: #0A84FF;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.2s;
+  flex-shrink: 0;
+}
+.send-btn:active { transform: scale(0.92); }
+.send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.send-btn .loader {
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #fff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.send-btn.loading .loader { display: block; }
+.send-btn.loading svg { display: none; }
+.circle-progress { position: relative; width: 32px; height: 32px; flex-shrink: 0; margin-left: 8px; list-style: none; }
+.circle-progress svg { transform: rotate(-90deg); }
+.circle-bg { fill: none; stroke: #333; stroke-width: 2; }
+.circle-fg { fill: none; stroke: #0A84FF; stroke-width: 2; stroke-linecap: round; transition: stroke-dashoffset 0.2s, stroke 0.2s; }
+.circle-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 10px; font-weight: 600; color: #fff; }
+.input-box { align-items: center; }
+
+/* MODAL MODERNE REHAUSSÉE */
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 2000; pointer-events: none; }
+.modal.open { display: flex; pointer-events: auto; }
+.modal > div { background: #0d0d0d; width: 92%; max-width: 460px; max-height: 85vh; border-radius: 20px; border: 1px solid #222; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+.settings-header { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; border-bottom: 1px solid #222; background: #0d0d0d; }
+.settings-header h2 { color: #fff; margin: 0; font-size: 18px; font-weight: 600; }
+.close-btn { background: transparent; border: none; color: #888; font-size: 24px; cursor: pointer; padding: 0 4px; transition: color 0.2s; }
+.close-btn:hover { color: #fff; }
+.settings-body { overflow-y: auto; padding: 20px; background: #0d0d0d; color: #fff; }
+
+.danger-btn { width: 100%; padding: 12px; background: transparent; border: 1px solid #ff3b30; color: #ff3b30; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.danger-btn:active { background: #ff3b30; color: #fff; }
+
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 1999; pointer-events: auto; }
+.overlay.open { display: block; }
+
+/* SIDEBAR & PROFILE ROW */
+.sidebar { position: fixed; top: 0; left: -100%; width: 280px; height: 100%; background: #111; border-right: 1px solid #2a2a2a; transition: left 0.3s ease; z-index: 1500; display: flex; flex-direction: column; }
+.sidebar.open { left: 0; }
+.sidebar header { display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid #2a2a2a; font-weight: 600; flex-shrink: 0; }
+.sidebar-header-left { display: flex; align-items: center; gap: 10px; }
+.new-chat-btn { position: static !important; transform: none; padding: 4px 8px; font-size: 13px; border-radius: 8px; }
+.list { padding: 8px; overflow-y: auto; flex: 1; }
+.sidebar-footer { padding: 12px; border-top: 1px solid #2a2a2a; flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; }
+
+.google-btn {
+  width: 100%;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #333;
+  color: #000;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.google-btn:active { opacity: 0.8; }
+.google-btn.connected { background: transparent; border: 1px solid #ff3b30; color: #ff3b30; }
+.google-btn.connected:active { background: #ff3b30; color: #fff; }
+
+.google-user-info { display: flex; flex-direction: column; gap: 8px; padding: 12px; background: #1a1a1a; border-radius: 8px; font-size: 12px; color: #fff; margin-bottom: 8px; }
+.google-user-row { display: flex; align-items: center; gap: 10px; }
+.google-user-info img { width: 34px; height: 34px; border-radius: 50%; border: 1px solid #333; }
+.google-user-name { font-size: 14px; font-weight: 600; color: #fff; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.google-user-verified {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 20px;
+  font-weight: 500;
+  margin-top: 2px;
+}
+.google-user-detail { font-size: 11px; color: #888; padding-left: 44px; word-break: break-all; }
+.google-user-detail strong { color: #ccc; }
+.danger-btn-small { width: 100%; padding: 10px; background: transparent; border: 1px solid #ff3b30; color: #ff3b30; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.danger-btn-small:active { background: #ff3b30; color: #fff; }
+
+.conv-item { padding: 12px; border-radius: 8px; margin-bottom: 4px; cursor: pointer; color: #ccc; font-size: 14px; }
+.conv-item:hover { background: #1a1a1a; color: #fff; }
+.empty { padding: 20px; text-align: center; color: #666; font-size: 14px; }
+
+/* CHAT WELCOME */
+#welcome { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; flex: 1; color: #fff; font-size: 32px; font-weight: 700; gap: 8px; user-select: none; pointer-events: none; }
+#welcome span { font-size: 16px; font-weight: 400; color: #666; }
+
+/* TYPING INDICATOR */
+.typing-wrapper { display: flex; align-items: center; gap: 10px; padding: 8px 16px; margin-bottom: 12px; }
+.infinity-thinking { width: 36px; height: 36px; position: relative; flex-shrink: 0; overflow: visible; display: flex; align-items: center; justify-content: center; }
+.infinity-thinking img { width: 36px; height: 36px; border-radius: 50%; object-fit: contain; display: block; }
+.infinity-thinking.spinning img { animation: spinNeural 1.2s linear infinite; transform-origin: center center; }
+@keyframes spinNeural { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.typing-text { font-size: 14px; color: #888; opacity: 0; transition: opacity 0.3s; }
+.typing-text.show { opacity: 1; }
+
+/* KATEX SOMBRE */
+.katex { color: #fff !important; font-size: 1.1em; border: none !important; background: transparent !important; padding: 0 !important; }
+.katex-display { margin: 1.2em 0; overflow-x: auto; border: none !important; background: transparent !important; }
+.katex-display > .katex { display: block; text-align: center; border: none !important; }
+.katex-html { border: none !important; background: transparent !important; }
+
+a, a:has(.katex), a .katex { border: none !important; background: transparent !important; padding: 0 !important; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.code-frame { border: none !important; padding: 0 !important; background: transparent !important; }
+.inline-code { background: #1a1a1a; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+
+@media (max-width: 768px) {
+  #termsScreen { padding: 24px 16px; }
+  #termsScreen h2 { font-size: 26px; }
+  .section-title { font-size: 20px; }
+  .content-block { padding: 20px; }
+}
+
+/* === Organisation de l'interface inspirée de ChatGPT : présentation uniquement === */
+body { background:#000 !important; color:#f5f5f5; }
+body > header, body header:not(.sidebar header) { min-height:76px; }
+body > header {
+  position:relative; display:flex; align-items:center; justify-content:center;
+  padding:16px 76px; box-sizing:border-box; background:#000; border:0;
+  font-size:0; z-index:10;
+}
+#offersBtn { display:flex; align-items:center; justify-content:center; min-height:48px; padding:0 24px; border:0; border-radius:28px; background:#39434d; color:#55a7ff; font-size:16px; font-weight:600; white-space:nowrap; cursor:pointer; }
+#offersBtn:active { opacity:.8; }
+body > header #historyBtn {
+  position:absolute; left:20px; top:50%; transform:translateY(-50%);
+  width:52px; height:52px; border:0; border-radius:50%; background:#292929;
+  font-size:0; display:flex; align-items:center; justify-content:center;
+}
+body > header #historyBtn::after { content:'☰'; font-size:25px; }
+#chat { background:#000; }
+.input-area {
+  position:fixed !important; left:0; right:0; bottom:0; z-index:20;
+  padding:10px 16px max(12px, env(safe-area-inset-bottom)) !important;
+  background:linear-gradient(to bottom, rgba(0,0,0,0), #000 18%); box-sizing:border-box;
+}
+.input-shortcuts { display:flex; flex-direction:column; gap:0; padding:0 20px 12px; }
+.input-shortcut { display:flex; align-items:center; gap:14px; padding:10px 0; border:0; background:transparent; color:#c9c9c9; text-align:left; font:inherit; font-size:15px; cursor:pointer; }
+.input-shortcut:active { opacity:.7; }
+.input-wrap { border-radius:28px !important; background:#292929 !important; border:1px solid #3a3a3a !important; padding:7px 10px !important; box-shadow:none !important; }
+.input-box { gap:8px; }
+#input { color:#fff !important; background:transparent !important; font-size:16px !important; }
+#input::placeholder { color:#aaa !important; }
+.send-btn { width:44px !important; height:44px !important; border-radius:50% !important; background:#3984f6 !important; }
+.circle-progress { display:none !important; }
+/* Navigation latérale */
+.sidebar { width:min(82vw, 330px) !important; background:#050505 !important; border-right:1px solid #242424 !important; }
+.sidebar > header { padding:20px 18px !important; min-height:72px; background:#050505; border-bottom:0 !important; }
+.sidebar-header-left { flex:1; }
+.sidebar-header-left > span { font-size:21px; font-weight:700; }
+.sidebar .new-chat-btn { background:#292929 !important; border:0 !important; border-radius:50% !important; width:38px; height:38px; font-size:0 !important; position:relative !important; }
+.sidebar .new-chat-btn::after { content:'＋'; font-size:23px; }
+#closeSidebar { font-size:26px; }
+.sidebar-nav { padding:4px 16px 16px; display:flex; flex-direction:column; gap:4px; }
+.sidebar-nav-item { display:flex; align-items:center; gap:16px; padding:12px 8px; color:#f5f5f5; border-radius:10px; font-size:16px; font-weight:500; background:transparent; border:0; text-align:left; }
+.sidebar-nav-item .nav-icon { width:26px; font-size:22px; text-align:center; }
+.sidebar-history-label { margin:14px 20px 8px; color:#888; font-size:12px; text-transform:uppercase; letter-spacing:.6px; }
+#convList { padding:8px 16px !important; }
+.conv-item { padding:12px 8px !important; border-radius:8px !important; font-size:14px !important; color:#e8e8e8 !important; }
+.sidebar-footer { border-top:1px solid #252525 !important; padding:12px 16px !important; }
+#googleAuthBtn { border-radius:24px !important; }
+#googleUserInfo { cursor:pointer; border-radius:14px; padding:10px; margin:0; background:#171717; }
+#googleUserInfo .google-user-row { align-items:center; }
+#googleUserInfo img { width:38px; height:38px; object-fit:cover; }
+#googleUserInfo:focus-visible { outline:2px solid #3984f6; }
+#profileModal .google-user-info { background:#171717; border:1px solid #2b2b2b; }
+#profileModal .google-user-detail { padding-left:0; margin-top:8px; }
+#deleteAllBtn { margin-top:8px; }
+#creatorInfoBtn { width:100%; margin-top:10px; padding:12px; border:1px solid #343434; border-radius:10px; background:#202020; color:#fff; font-size:14px; font-weight:600; cursor:pointer; }
+#creatorInfoBtn:active { background:#303030; }
+.creator-card { padding:18px; border:1px solid #292929; border-radius:14px; background:#151515; line-height:1.65; color:#ddd; }
+.creator-card strong { color:#fff; }
+.creator-card a { color:#8ab4ff; }
+#webSearchStatus { position:fixed; top:76px; left:50%; transform:translateX(-50%); z-index:1800; display:none; align-items:center; gap:9px; max-width:calc(100vw - 28px); padding:10px 15px; border:1px solid #333; border-radius:24px; background:#171717; color:#eee; font-size:13px; box-shadow:0 8px 24px rgba(0,0,0,.35); }
+#webSearchStatus.visible { display:flex; }
+#webSearchStatus .search-dot { width:8px; height:8px; border-radius:50%; background:#3984f6; box-shadow:0 0 0 4px rgba(57,132,246,.15); animation:searchPulse 1.2s infinite; }
+@keyframes searchPulse { 50% { opacity:.45; } }
+@media (max-width:480px) {
+  body > header { padding-left:76px; padding-right:76px; }
+  body > header::after { font-size:14px; padding:0 16px; }
+  .input-area { padding-left:12px !important; padding-right:12px !important; }
+}
+
+
+/* Interaction discrète : aucun cadre bleu ni effet visuel au toucher des boutons. */
+button,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+a,
+.conv-item,
+.sidebar-nav-item,
+.input-shortcut {
+  -webkit-tap-highlight-color: transparent !important;
+  tap-highlight-color: transparent;
+  outline: none !important;
+  box-shadow: none;
+}
+button:focus,
+button:focus-visible,
+[role="button"]:focus,
+[role="button"]:focus-visible,
+input[type="button"]:focus,
+input[type="submit"]:focus,
+a:focus,
+a:focus-visible,
+.conv-item:focus,
+.sidebar-nav-item:focus,
+.input-shortcut:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+button:active,
+[role="button"]:active,
+input[type="button"]:active,
+input[type="submit"]:active,
+a:active,
+.conv-item:active,
+.sidebar-nav-item:active,
+.input-shortcut:active {
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+
+/* Retours Infinity : signalement et évaluations */
+#reportBugBtn{width:100%;margin-top:10px;padding:12px;border:1px solid #444;border-radius:10px;background:#202020;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#reportBugBtn:active{opacity:.8}
+.ai-feedback{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;margin:12px auto 4px;color:#858585;font-size:11px;text-align:center}
+.ai-feedback-actions{display:flex;align-items:center;gap:14px}
+.ai-feedback button{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:34px;min-height:32px;padding:5px 8px;border:0;border-radius:8px;background:transparent;color:#999;cursor:pointer;font-size:13px}
+.ai-feedback button:hover{background:#202020;color:#eee}
+.ai-feedback button.selected{color:#8ab4ff;background:#172334}
+.ai-feedback button svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ai-disclaimer{max-width:360px;line-height:1.45}
+#bugReportModal textarea{width:100%;min-height:130px;resize:vertical;padding:12px;background:#171717;color:#fff;border:1px solid #333;border-radius:10px;box-sizing:border-box;font:inherit}
+#bugReportModal .settings-action-btn{margin-top:12px;background:#3984f6;border:0;color:#fff}
+.feedback-status{font-size:12px;color:#aaa;margin-top:8px;line-height:1.5}
+
+
+/* Message de bienvenue après connexion Google */
+#welcomeLoginModal{position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.82)}
+#welcomeLoginModal.open{display:flex}
+#welcomeLoginCard{width:min(420px,100%);box-sizing:border-box;padding:26px 22px;border:1px solid #333;border-radius:18px;background:#000;color:#fff;text-align:center;box-shadow:0 18px 60px rgba(0,0,0,.6)}
+#welcomeLoginCard h2{margin:0 0 12px;color:#fff;font-size:23px}
+#welcomeLoginCard p{margin:0 0 22px;color:#fff;font-size:15px;line-height:1.6}
+#welcomeLoginOk{min-width:110px;padding:11px 24px;border:1px solid #fff;border-radius:10px;background:#fff;color:#000;font-size:15px;font-weight:700;cursor:pointer}
+/* Empêche la copie du texte de l'interface ; autorise celle du texte des réponses IA uniquement. */
+body.copy-locked, body.copy-locked *{-webkit-user-select:none !important;user-select:none !important}
+#chat .msg-wrapper.bot .msg, #chat .msg-wrapper.bot-full .msg,
+#chat .msg-wrapper.bot .msg *, #chat .msg-wrapper.bot-full .msg *{-webkit-user-select:text !important;user-select:text !important}
+
+</style>
+</head>
+<body>
+<button id="installBtn">Installer l'app</button>
+
+<div id="termsScreen">
+  <div id="termsContent">
+    <h2>Confidentialité & Utilisation</h2>
+    <p class="subtitle">Infinity - Dernière mise à jour : 20 octobre 2026</p>
+
+    <div class="section">
+      <div class="section-title">Confidentialité</div>
+
+      <div class="content-block">
+        <h3>1. Stockage des données</h3>
+        <p>Toutes vos conversations sont <span class="highlight">stockées localement</span> sur votre appareil. Infinity n'envoie aucune donnée vers des serveurs externes.</p>
+        <p>Vos messages, historiques et préférences restent dans le <span class="highlight">localStorage</span> de votre navigateur. Vous gardez le contrôle total.</p>
+      </div>
+
+      <div class="content-block">
+        <h3>2. Aucune collecte</h3>
+        <ul>
+          <li>Nous ne collectons pas vos conversations</li>
+          <li>Nous ne vendons aucune donnée personnelle</li>
+          <li>Nous ne trackons pas votre activité</li>
+          <li>Aucun cookie tiers ou analytics</li>
+        </ul>
+      </div>
+
+      <div class="content-block">
+        <h3>3. API externes</h3>
+        <p>Infinity utilise des API tierces pour générer les réponses IA. Vos prompts sont envoyés uniquement pour traitement et <span class="highlight">ne sont pas conservés</span> par les fournisseurs.</p>
+        <div class="info-box">
+          <p>Les fournisseurs d'API respectent leurs propres politiques de confidentialité. Nous recommandons de ne jamais partager d'informations sensibles.</p>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3>4. Sécurité</h3>
+        <p>Ne partagez jamais :</p>
+        <ul>
+          <li>Mots de passe ou identifiants</li>
+          <li>Numéros de carte bancaire</li>
+          <li>Informations médicales sensibles</li>
+          <li>Documents confidentiels</li>
+        </ul>
+        <div class="warning-box">
+          <p>L'IA peut générer des réponses inexactes. Ne vous fiez pas à Infinity pour des décisions critiques : médicales, juridiques ou financières.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Comment utiliser Infinity</div>
+
+      <div class="content-block">
+        <h3>1. Démarrer une conversation</h3>
+        <p>Tapez votre message dans la zone de saisie en bas et appuyez sur <span class="highlight">Envoyer</span> ou la touche Entrée.</p>
+        <p>L'IA répond en temps réel. Vous pouvez poser des questions, demander de l'aide, générer du texte, du code, etc.</p>
+      </div>
+
+      <div class="content-block">
+        <h3>2. Historique des chats</h3>
+        <p>Cliquez sur l'icône <span class="highlight">Historique</span> en haut à gauche pour voir toutes vos conversations.</p>
+        <ul>
+          <li>Créer un nouveau chat avec le bouton +</li>
+          <li>Reprendre une conversation existante</li>
+          <li>Supprimer l'historique complet si besoin</li>
+        </ul>
+      </div>
+
+      <div class="content-block">
+        <h3>3. Paramètres</h3>
+        <p>Accédez aux paramètres via l'icône en haut à droite :</p>
+        <ul>
+          <li>Changer la taille de police : Petit / Moyen / Grand</li>
+          <li>Voir les infos de l'app</li>
+          <li>Gérer les données locales</li>
+        </ul>
+      </div>
+
+      <div class="content-block">
+        <h3>4. Fonctionnalités</h3>
+        <ul>
+          <li><span class="highlight">Markdown</span> : formatage riche avec **gras**, *italique*, listes</li>
+          <li><span class="highlight">Code</span> : coloration syntaxique pour 20+ langages</li>
+          <li><span class="highlight">Maths</span> : formules LaTeX automatiques $$x^2 + y^2$$</li>
+          <li><span class="highlight">Liens</span> : URLs cliquables automatiquement</li>
+          <li><span class="highlight">PWA</span> : installable comme app mobile</li>
+        </ul>
+      </div>
+
+      <div class="content-block">
+        <h3>5. Raccourcis</h3>
+        <ul>
+          <li><span class="highlight">Entrée</span> : envoyer le message</li>
+          <li><span class="highlight">Shift + Entrée</span> : retour à la ligne</li>
+          <li><span class="highlight">Swipe</span> : ouvrir/fermer l'historique sur mobile</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Limites & Responsabilités</div>
+
+      <div class="content-block">
+        <h3>Ce que Infinity ne fait PAS</h3>
+        <ul>
+          <li>Donner des conseils médicaux, juridiques ou financiers fiables</li>
+          <li>Accéder à Internet en temps réel</li>
+          <li>Mémoriser vos infos entre les sessions</li>
+          <li>Garantir 100% de précision</li>
+        </ul>
+        <div class="warning-box">
+          <p>Vous êtes responsable de l'usage que vous faites des réponses. Vérifiez toujours les informations critiques auprès de sources officielles.</p>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3>Usage interdit</h3>
+        <ul>
+          <li>Générer du spam ou du contenu frauduleux</li>
+          <li>Harceler ou menacer des personnes</li>
+          <li>Créer du contenu illégal ou violent</li>
+          <li>Reverse engineering de l'app</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="terms-check">
+      <input type="checkbox" id="acceptTerms">
+      <label for="acceptTerms">J'accepte les conditions de confidentialité et d'utilisation</label>
+    </div>
+  </div>
+
+  <button id="continueBtn" disabled>
+    <span class="loader"></span>
+    <span class="btn-text">Continuer</span>
+  </button>
+</div>
+
+<header>
+<button class="btn" id="historyBtn" aria-label="Ouvrir le menu">☰</button>
+<button id="offersBtn" type="button">✦&nbsp; Voir les offres</button>
+
+</header>
+
+<div id="chat">
+<div id="welcome">Infinity<span>Pose-moi une question</span></div>
+</div>
+
+<div class="input-area">
+<div class="input-shortcuts">
+  <button class="input-shortcut" id="createImageShortcut" type="button"><span aria-hidden="true">▧</span><span>Créer une image ou un sticker</span></button>
+  <button class="input-shortcut" id="writeEditShortcut" type="button"><span aria-hidden="true">✎</span><span>Écrire ou modifier</span></button>
+</div>
+<div class="input-wrap">
+<div class="input-box">
+<textarea id="input" rows="1" placeholder="Répondre à Infinity..."></textarea>
+<div class="circle-progress">
+<svg width="32" height="32">
+<circle class="circle-bg" cx="16" cy="16" r="13"/>
+<circle class="circle-fg" cx="16" cy="16" r="13" stroke-dasharray="81.68" stroke-dashoffset="81.68"/>
+</svg>
+<div class="circle-text">0</div>
+</div>
+</div>
+<button class="send-btn" id="sendBtn">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+<path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+<span class="loader"></span>
+</button>
+</div>
+</div>
+
+<div class="sidebar" id="sidebar">
+<header>
+<div class="sidebar-header-left">
+<span>Historique</span>
+<button class="btn new-chat-btn" id="newChatBtn">+ Nouveau</button>
+</div>
+<button class="close-btn" id="closeSidebar">×</button>
+</header>
+<div class="sidebar-nav" aria-label="Navigation principale">
+  <button class="sidebar-nav-item" id="navImages" type="button"><span class="nav-icon">▧</span><span>Images</span></button>
+  <button class="sidebar-nav-item" id="navLibrary" type="button"><span class="nav-icon">▤</span><span>Bibliothèque</span></button>
+  <button class="sidebar-nav-item" id="navProjects" type="button"><span class="nav-icon">▱</span><span>Projets</span></button>
+  <button class="sidebar-nav-item" id="navScheduled" type="button"><span class="nav-icon">◷</span><span>Planifiées</span></button>
+  <button class="sidebar-nav-item" id="navPlugins" type="button"><span class="nav-icon">♧</span><span>Plugins</span></button>
+</div>
+<div class="sidebar-history-label">Conversations récentes</div>
+<div class="list" id="convList"></div>
+<div class="sidebar-footer">
+  <div id="googleUserInfo" class="google-user-info" style="display:none;" role="button" tabindex="0" aria-label="Ouvrir le profil">
+    <div class="google-user-row">
+      <img id="googleUserPic" src="" alt="Photo de profil">
+      <div class="google-user-name" id="googleUserName">Utilisateur</div>
+      <span aria-hidden="true" style="color:#aaa;margin-left:auto">⌄</span>
+    </div>
+  </div>
+  <button class="google-btn" id="googleAuthBtn">
+    <svg width="18" height="18" viewBox="0 0 18 18" style="vertical-align: -3px; margin-right: 8px;">
+      <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>
+      <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+      <path fill="#FBBC05" d="M3.964 10.712c-.18-.54-.282-1.117-.282-1.71 0-.593.102-1.17.282-1.71V4.96H.957C.347 6.175 0 7.55 0 9c0 1.45.347 2.825.957 4.04l3.007-2.328z"/>
+      <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.96L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+    </svg>
+    <span id="googleAuthText">Se connecter avec Google</span>
+  </button>
+</div>
+</div>
+
+<div class="modal" id="profileModal" role="dialog" aria-modal="true" aria-label="Profil et compte">
+  <div>
+    <div class="settings-header">
+      <h2>Mon profil</h2>
+      <button class="close-btn" id="closeProfileModal" aria-label="Fermer">×</button>
+    </div>
+    <div class="settings-body">
+      <div class="google-user-info" style="display:flex; margin-bottom:18px;">
+        <div class="google-user-row">
+          <img id="profilePic" src="" alt="Photo de profil">
+          <div><div class="google-user-name" id="profileName">Utilisateur</div><div class="google-user-verified" id="profileVerified">Statut du compte</div></div>
+        </div>
+        <div class="google-user-detail"><strong>Email :</strong> <span id="profileEmail"></span></div>
+        <div class="google-user-detail"><strong>ID :</strong> <span id="profileId"></span></div>
+        <div class="google-user-detail"><strong>Langue :</strong> <span id="profileLang"></span></div>
+      </div>
+      <button id="creatorInfoBtn" type="button">ⓘ Info sur le créateur</button>
+      <button id="reportBugBtn" type="button">🐞 Signaler un bug</button>
+      <button class="danger-btn-small" id="deleteAllBtn" type="button">Supprimer toutes les conversations</button>
+      <button class="google-btn connected" id="profileLogoutBtn" type="button" style="margin-top:10px;">Se déconnecter</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="creatorInfoModal" role="dialog" aria-modal="true" aria-label="Informations sur le créateur">
+  <div>
+    <div class="settings-header">
+      <h2>À propos du créateur</h2>
+      <button class="close-btn" id="closeCreatorInfo" aria-label="Fermer">×</button>
+    </div>
+    <div class="settings-body">
+      <div class="creator-card">
+        <strong>Firmin — FIRMINX Founder</strong><br>
+        Lead Developer &amp; AI Architect, basé en République démocratique du Congo 🇨🇩.<br><br>
+        <strong>La vision d'Infinity</strong><br>
+        Rendre l'intelligence artificielle moderne plus accessible partout en Afrique.<br><br>
+        <strong>Contact</strong><br>
+        <a href="mailto:firminphinees@gmail.com">firminphinees@gmail.com</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="bugReportModal" role="dialog" aria-modal="true" aria-label="Signaler un bug">
+  <div>
+    <div class="settings-header">
+      <h2>Signaler un bug</h2>
+      <button class="close-btn" id="closeBugReport" aria-label="Fermer">×</button>
+    </div>
+    <div class="settings-body">
+      <p style="color:#bbb;font-size:13px;line-height:1.5;margin-top:0">Décris le problème rencontré. Le signalement sera envoyé à l’équipe Infinity.</p>
+      <textarea id="bugReportText" maxlength="5000" placeholder="Que s’est-il passé ? Quelles étapes permettent de reproduire le bug ?"></textarea>
+      <button class="settings-action-btn" id="sendBugReport" type="button">Envoyer le signalement</button>
+      <div class="feedback-status" id="bugReportStatus" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+</div>
+
+<div id="webSearchStatus" role="status" aria-live="polite"><span class="search-dot"></span><span>Recherche web en cours…</span></div>
+
+<div class="modal" id="settingsModal">
+<div>
+<div class="settings-header">
+<h2>Paramètres</h2>
+<button class="close-btn" id="closeSettings">×</button>
+</div>
+<div class="settings-body">
+
+  <div class="settings-section">
+    <h3>👤 Gestion du Compte</h3>
+    <div class="setting-item">
+      <label>Statut de synchronisation</label>
+      <div class="info-text" id="accountSyncStatus">Chargement...</div>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <h3>🤖 Intelligence & Modèle</h3>
+    <div class="setting-item">
+      <label for="modelSelect">Modèle actif</label>
+      <select id="modelSelect" class="setting-select">
+        <option value="Infinity-standard" selected>Infinity Standard (Rapide & Équilibré)</option>
+        <option value="Infinity-pro">Infinity Pro (Raisonnement Complexe & Code)</option>
+        <option value="infinity-ultra">Infinity Ultra (Créativité avancée)</option>
+      </select>
+    </div>
+    <div class="setting-item">
+      <label for="toneSelect">Style de réponse</label>
+      <select id="toneSelect" class="setting-select">
+        <option value="concise">Directe et Concise</option>
+        <option value="detailed" selected>Détaillée et Pédagogique</option>
+        <option value="creative">Créative / Code Spécifique</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <h3>🔒 Sécurité & Données</h3>
+    <div class="setting-item">
+      <label>Espace de stockage local</label>
+      <button class="settings-action-btn" onclick="alert('IndexDB nettoyé avec succès !')">Vider le cache des messages</button>
+      <button class="settings-action-btn" id="exportConvsBtn">Exporter les conversations (.json)</button>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <h3>👑 À propos du projet</h3>
+    <div class="setting-item">
+      <label>Créateur & Vision</label>
+      <div class="info-text">
+        <strong>Firmin - FIRMINX Founder</strong><br>
+        Lead Developer & AI Architect, basé en RDC 🇨🇩.<br>
+        L'objectif ultime Infinity est de propulser et de rendre accessible l'IA moderne partout en Afrique.
+      </div>
+    </div>
+    <div class="setting-item">
+      <label>Contact Support</label>
+      <div class="info-text"><a href="mailto:firminphinees@gmail.com">firminphinees@gmail.com</a></div>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <button class="danger-btn" id="reviewTermsBtn">Revoir les conditions d'utilisation</button>
+  </div>
+</div>
+</div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<div id="welcomeLoginModal" role="dialog" aria-modal="true" aria-labelledby="welcomeLoginTitle">
+  <div id="welcomeLoginCard">
+    <h2 id="welcomeLoginTitle">Bienvenue sur Infinity !</h2>
+    <p id="welcomeLoginText">Content de vous revoir. Votre compte Google est connecté.</p>
+    <button id="welcomeLoginOk" type="button">OK</button>
+  </div>
+</div>
+
+
+
+<script src="config.js"></script>
+<script src="script.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
+<script>
+// === CONFIG BACKEND ===
+const BACKEND_URL = 'https://aur-x-backend.vercel.app';
+
+// La sélection/copie est autorisée uniquement dans le texte des réponses de l'IA.
+document.body.classList.add('copy-locked');
+document.addEventListener('copy', event => {
+  const selection = window.getSelection();
+  const selectedText = selection ? selection.toString() : '';
+  if (!selectedText) { event.preventDefault(); return; }
+  const range = selection.getRangeAt(0);
+  const start = range.startContainer.nodeType === Node.ELEMENT_NODE
+    ? range.startContainer : range.startContainer.parentElement;
+  const end = range.endContainer.nodeType === Node.ELEMENT_NODE
+    ? range.endContainer : range.endContainer.parentElement;
+  const startAI = start?.closest?.('#chat .msg-wrapper.bot .msg, #chat .msg-wrapper.bot-full .msg');
+  const endAI = end?.closest?.('#chat .msg-wrapper.bot .msg, #chat .msg-wrapper.bot-full .msg');
+  if (!startAI || !endAI || startAI !== endAI) event.preventDefault();
+});
+
+// === GOOGLE AUTH VIA BACKEND VERCEL ===
+let googleUser = null;
+
+async function checkAuth() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/auth/me`, { credentials: 'include' });
+    if (res.ok) {
+      googleUser = await res.json();
+      updateGoogleUI(true);
+      // N'affiche l'accueil que si l'utilisateur vient de lancer une connexion Google.
+      // Une actualisation normale ne doit jamais déclencher ce message.
+      if (sessionStorage.getItem('infinity_google_login_pending') === '1') {
+        sessionStorage.removeItem('infinity_google_login_pending');
+        showGoogleWelcome();
+      }
+    } else {
+      googleUser = null;
+      updateGoogleUI(false);
+    }
+  } catch (e) {
+    console.log('Pas encore connecté');
+    googleUser = null;
+    updateGoogleUI(false);
+  }
+}
+
+function showGoogleWelcome() {
+  const modal = document.getElementById('welcomeLoginModal');
+  const text = document.getElementById('welcomeLoginText');
+  if (!modal) return;
+  const name = (googleUser?.name || '').trim();
+  text.textContent = name
+    ? `Bienvenue ${name} ! Votre compte Google est connecté à Infinity. Appuyez sur OK pour continuer.`
+    : 'Bienvenue sur Infinity ! Votre compte Google est connecté. Appuyez sur OK pour continuer.';
+  modal.classList.add('open');
+}
+
+document.getElementById('welcomeLoginOk')?.addEventListener('click', () => {
+  document.getElementById('welcomeLoginModal')?.classList.remove('open');
+});
+
+function updateGoogleUI(isConnected) {
+  const googleBtn = document.getElementById('googleAuthBtn');
+  const googleText = document.getElementById('googleAuthText');
+  const userInfo = document.getElementById('googleUserInfo');
+  const userPic = document.getElementById('googleUserPic');
+  const userName = document.getElementById('googleUserName');
+  const profilePic = document.getElementById('profilePic');
+  const profileName = document.getElementById('profileName');
+  const profileEmail = document.getElementById('profileEmail');
+  const profileId = document.getElementById('profileId');
+  const profileLang = document.getElementById('profileLang');
+  const userVerified = document.getElementById('profileVerified');
+  const accountSyncStatus = document.getElementById('accountSyncStatus');
+
+  if (isConnected && googleUser) {
+    googleBtn.style.display = 'none';
+    userInfo.style.display = 'block';
+    userPic.src = googleUser.picture || '';
+    userName.textContent = googleUser.name || 'Utilisateur';
+    profilePic.src = googleUser.picture || '';
+    profileName.textContent = googleUser.name || 'Utilisateur';
+    profileEmail.textContent = googleUser.email || 'N/A';
+    profileId.textContent = googleUser.sub || googleUser.id || 'N/A';
+    profileLang.textContent = (googleUser.locale || 'fr').toUpperCase();
+
+    if (googleUser.email_verified === true) {
+      userVerified.textContent = '✓ Vérifié';
+      userVerified.style.color = '#34A853';
+      userVerified.style.background = 'rgba(52, 168, 83, 0.1)';
+    } else {
+      userVerified.textContent = '⚠ Non vérifié';
+      userVerified.style.color = '#ff3b30';
+      userVerified.style.background = 'rgba(255, 59, 48, 0.1)';
+    }
+
+    if (accountSyncStatus) {
+      accountSyncStatus.innerHTML = `Connecté en tant que <strong>${googleUser.name}</strong>.<br><span style="color:#34A853; font-size:12px;">✓ Synchronisation cloud active. Conversations sauvegardées.</span>`;
+    }
+  } else {
+    googleBtn.style.display = 'flex';
+    googleBtn.classList.remove('connected');
+    googleText.textContent = 'Se connecter avec Google';
+    userInfo.style.display = 'none';
+
+    if (accountSyncStatus) {
+      accountSyncStatus.innerHTML = `Mode invité actif (Local uniquement).<br><span style="color:#ff9500; font-size:12px;">⚠ Connectez-vous pour ne pas perdre vos conversations.</span>`;
+    }
+  }
+}
+
+async function logoutGoogleAccount() {
+  try {
+    await fetch(`${BACKEND_URL}/api/auth/logout`, { method: 'POST', credentials: 'include' });
+  } catch (e) { console.error('Erreur déconnexion:', e); }
+  googleUser = null;
+  updateGoogleUI(false);
+  document.getElementById('profileModal')?.classList.remove('open');
+  document.getElementById('overlay')?.classList.remove('open');
+  window.location.href = 'https://ax3d.vercel.app/';
+}
+
+document.getElementById('googleAuthBtn')?.addEventListener('click', () => {
+  // Marque explicitement une connexion demandée par l'utilisateur.
+  // sessionStorage survit à la redirection OAuth mais pas à une nouvelle session navigateur.
+  sessionStorage.setItem('infinity_google_login_pending', '1');
+  window.location.href = `${BACKEND_URL}/api/auth/google`;
+});
+document.getElementById('profileLogoutBtn')?.addEventListener('click', logoutGoogleAccount);
+const profileTrigger = document.getElementById('googleUserInfo');
+function openProfileModal() {
+  if (!googleUser) return;
+  document.getElementById('profileModal')?.classList.add('open');
+  document.getElementById('overlay')?.classList.add('open');
+}
+profileTrigger?.addEventListener('click', openProfileModal);
+profileTrigger?.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProfileModal(); } });
+document.getElementById('overlay')?.addEventListener('click', () => { document.getElementById('profileModal')?.classList.remove('open'); document.getElementById('creatorInfoModal')?.classList.remove('open'); document.getElementById('overlay')?.classList.remove('open'); });
+document.getElementById('closeProfileModal')?.addEventListener('click', () => {
+  document.getElementById('profileModal')?.classList.remove('open');
+  document.getElementById('overlay')?.classList.remove('open');
+});
+
+// === INFOS CRÉATEUR ===
+const creatorInfoModal = document.getElementById('creatorInfoModal');
+document.getElementById('creatorInfoBtn')?.addEventListener('click', () => {
+  document.getElementById('profileModal')?.classList.remove('open');
+  creatorInfoModal?.classList.add('open');
+  document.getElementById('overlay')?.classList.add('open');
+});
+function closeCreatorInfoModal() {
+  creatorInfoModal?.classList.remove('open');
+  document.getElementById('overlay')?.classList.remove('open');
+}
+document.getElementById('closeCreatorInfo')?.addEventListener('click', closeCreatorInfoModal);
+
+// === INDICATEUR DE RECHERCHE WEB ===
+// L'interface peut recevoir un signal explicite depuis le moteur IA via :
+// window.dispatchEvent(new CustomEvent('infinity:web-search', {detail:{active:true}}));
+const webSearchStatus = document.getElementById('webSearchStatus');
+let webSearchHideTimer = null;
+function setWebSearchStatus(active) {
+  if (!webSearchStatus) return;
+  clearTimeout(webSearchHideTimer);
+  webSearchStatus.classList.toggle('visible', Boolean(active));
+  if (active) {
+    webSearchStatus.querySelector('span:last-child').textContent = 'Recherche web en cours…';
+  } else {
+    // Laisse le statut visible un court instant pour éviter un clignotement trop rapide.
+    webSearchHideTimer = setTimeout(() => webSearchStatus.classList.remove('visible'), 700);
+  }
+}
+window.addEventListener('infinity:web-search', event => setWebSearchStatus(event.detail?.active !== false));
+// Aucun MutationObserver global ici : le statut est piloté par les événements SSE
+// explicites du backend, ce qui évite de relire document.body.innerText en boucle.
+
+// === GESTION DE L'ÉCRAN DES CONDITIONS (CHECKBOX + LOGIQUE CONTINUER) ===
+const acceptTermsCheckbox = document.getElementById('acceptTerms');
+const continueBtn = document.getElementById('continueBtn');
+const termsScreen = document.getElementById('termsScreen');
+
+if (acceptTermsCheckbox && continueBtn && termsScreen) {
+  acceptTermsCheckbox.addEventListener('change', () => {
+    if (acceptTermsCheckbox.checked) {
+      continueBtn.disabled = false;
+      continueBtn.classList.add('active');
+    } else {
+      continueBtn.disabled = true;
+      continueBtn.classList.remove('active');
+    }
+  });
+
+  continueBtn.addEventListener('click', () => {
+    termsScreen.style.display = 'none';
+  });
+}
+
+// Revoir l'écran depuis le bouton des paramètres
+document.getElementById('reviewTermsBtn')?.addEventListener('click', () => {
+  document.getElementById('settingsModal').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+  if (termsScreen) termsScreen.style.display = 'flex';
+});
+
+// === EXPORTATION DES CONVERSATIONS EN JSON ===
+document.getElementById('exportConvsBtn')?.addEventListener('click', () => {
+  try {
+    // Récupération des conversations stockées localement
+    const conversations = localStorage.getItem('infinity_conversations');
+
+    if (!conversations || conversations === '[]') {
+      alert('Aucune conversation à exporter dans votre historique local.');
+      return;
+    }
+
+    // Création du fichier téléchargeable au format JSON
+    const blob = new Blob([conversations], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `infinity-conversations-${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Erreur d'exportation :", error);
+    alert("Impossible d'exporter vos données pour le moment.");
+  }
+});
+
+// === WELCOME TOGGLE ===
+function toggleWelcome() {
+  const chat = document.getElementById('chat');
+  const welcome = document.getElementById('welcome');
+  if (!welcome) return;
+
+  const hasMessages = chat.querySelector('.msg-wrapper, .typing-wrapper');
+  welcome.style.display = hasMessages ? 'none' : 'flex';
+}
+
+// === ATTENDRE QUE KATEX SOIT CHARGÉ ===
+function waitForKatex(callback) {
+  if (window.renderMathInElement) {
+    callback();
+  } else {
+    setTimeout(() => waitForKatex(callback), 100);
+  }
+}
+
+// === RENDER MATH KATEX ===
+function renderMath(element = document.getElementById('chat')) {
+  if (typeof renderMathInElement === 'undefined') return;
+
+  renderMathInElement(element, {
+    delimiters: [
+      { left: '$$', right: '$$', display: true },
+      { left: '$', right: '$', display: false },
+      { left: '\\(', right: '\\)', display: false },
+      { left: '\\[', right: '\\]', display: true }
+    ],
+    throwOnError: false
+  });
+}
+
+let renderTimeout = null;
+
+// === INIT DOM ===
+document.addEventListener('DOMContentLoaded', () => {
+  checkAuth();
+  toggleWelcome();
+
+  waitForKatex(() => {
+    setTimeout(() => renderMath(), 300);
+
+    const chat = document.getElementById('chat');
+
+    const observer = new MutationObserver((mutations) => {
+      // Ne pas relancer KaTeX pour chaque fragment reçu pendant que l'IA écrit.
+      // On ne réagit qu'à l'ajout/suppression de messages complets, hors flux actif.
+      const meaningfulChange = mutations.some(mutation => {
+        const target = mutation.target instanceof Element ? mutation.target : mutation.target.parentElement;
+        if (target?.closest?.('.streaming')) return false;
+        const changedNodes = [...mutation.addedNodes, ...mutation.removedNodes];
+        return changedNodes.some(node => {
+          if (node.nodeType !== Node.ELEMENT_NODE) return false;
+          return !node.matches?.('.streaming') && !node.querySelector?.('.streaming');
+        });
+      });
+      if (!meaningfulChange) return;
+      clearTimeout(renderTimeout);
+      renderTimeout = setTimeout(() => {
+        renderMath(chat);
+        toggleWelcome();
+      }, 350);
+    });
+
+    observer.observe(chat, { childList: true, subtree: true });
+  });
+});
+
+
+// === OPTIONS NON ENCORE PRISES EN CHARGE ===
+(function wireReorganizedUI() {
+  const sidebar = document.getElementById('sidebar');
+  const closeSidebar = () => sidebar?.classList.remove('open');
+  const showUnavailable = (feature) => {
+    window.alert(feature + " n’est pas encore pris en charge dans cette version d’Infinity. Le bouton sera activé lorsque cette fonctionnalité sera réellement disponible.");
+  };
+
+  // Les fonctions de base déjà présentes (chat, historique et paramètres) restent inchangées.
+  // Les éléments ajoutés pour ressembler à l’interface de ChatGPT indiquent clairement
+  // qu’ils ne sont pas encore disponibles, plutôt que de simuler une fonctionnalité.
+  document.getElementById('offersBtn')?.addEventListener('click', () => {
+    showUnavailable('Les offres et abonnements');
+  });
+
+  document.getElementById('createImageShortcut')?.addEventListener('click', () => {
+    showUnavailable('La création d’images et de stickers');
+  });
+  document.getElementById('navImages')?.addEventListener('click', () => {
+    closeSidebar();
+    showUnavailable('La section Images');
+  });
+  document.getElementById('writeEditShortcut')?.addEventListener('click', () => {
+    showUnavailable('L’outil dédié « Écrire ou modifier »');
+  });
+  document.getElementById('navLibrary')?.addEventListener('click', () => {
+    closeSidebar();
+    showUnavailable('La Bibliothèque');
+  });
+  document.getElementById('navProjects')?.addEventListener('click', () => {
+    closeSidebar();
+    showUnavailable('Les Projets');
+  });
+  document.getElementById('navScheduled')?.addEventListener('click', () => {
+    closeSidebar();
+    showUnavailable('Les tâches planifiées');
+  });
+
+  document.getElementById('navPlugins')?.addEventListener('click', () => {
+    closeSidebar();
+    showUnavailable('Les Plugins');
+  });
+})();
+
+// === SIGNALEMENTS ET COTATIONS VIA LE BACKEND INFINITY ===
+// Les retours passent par le backend Infinity ; aucun secret n'est stocké dans le HTML.
+const INFINITY_FEEDBACK_ENDPOINT = `${BACKEND_URL}/api/feedback`;
+
+async function sendInfinityFeedback(payload) {
+  const response = await fetch(INFINITY_FEEDBACK_ENDPOINT, {
+    method: 'POST',
+    credentials: 'omit',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  let result = {};
+  try { result = await response.json(); } catch (_) {}
+  if (!response.ok || result.success !== true) {
+    const detail = result.error || result.message || `Erreur HTTP ${response.status}`;
+    throw new Error(detail);
+  }
+  return result;
+}
+
+const bugModal = document.getElementById('bugReportModal');
+const bugStatus = document.getElementById('bugReportStatus');
+function closeBugModal() {
+  bugModal?.classList.remove('open');
+  document.getElementById('overlay')?.classList.remove('open');
+}
+document.getElementById('reportBugBtn')?.addEventListener('click', () => {
+  document.getElementById('profileModal')?.classList.remove('open');
+  bugModal?.classList.add('open');
+  document.getElementById('overlay')?.classList.add('open');
+});
+document.getElementById('closeBugReport')?.addEventListener('click', closeBugModal);
+document.getElementById('overlay')?.addEventListener('click', closeBugModal);
+
+document.getElementById('sendBugReport')?.addEventListener('click', async () => {
+  const field = document.getElementById('bugReportText');
+  const description = field.value.trim();
+  if (!description) {
+    bugStatus.textContent = 'Décris le bug avant de l’envoyer.';
+    return;
+  }
+  const btn = document.getElementById('sendBugReport');
+  btn.disabled = true;
+  bugStatus.textContent = 'Envoi en cours…';
+  try {
+    await sendInfinityFeedback({
+      type: 'bug',
+      description,
+      category: 'Signalement depuis l’application',
+      userName: googleUser?.name || (googleUser ? 'Utilisateur connecté' : 'Invité'),
+      userEmail: googleUser?.email || '',
+      timestamp: new Date().toISOString(),
+      page: location.href,
+      appVersion: 'Infinity'
+    });
+    bugStatus.textContent = 'Signalement envoyé. Merci !';
+    field.value = '';
+  } catch (error) {
+    console.error('Erreur signalement Infinity :', error);
+    bugStatus.textContent = /service d’envoi n’est pas configuré|service d’envoi n’est pas configuré/i.test(error.message)
+      ? 'Le service e-mail du serveur n’est pas encore configuré sur Vercel.'
+      : `Échec de l’envoi : ${error.message || 'erreur réseau'}. Vérifie le déploiement du backend et réessaie.`;
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+// Ajoute les boutons 👍 / 👎 sous chaque réponse IA, y compris les messages restaurés.
+function addInfinityFeedbackToReplies() {
+  document.querySelectorAll('#chat .msg-wrapper.bot, #chat .msg-wrapper.bot-full').forEach(wrapper => {
+    if (wrapper.dataset.infinityFeedbackReady === '1') return;
+    // Les messages en cours de génération ne reçoivent les commandes qu’une fois terminés.
+    if (wrapper.querySelector('.streaming')) return;
+    const messageEl = wrapper.querySelector('.msg');
+    if (!messageEl) return;
+    wrapper.dataset.infinityFeedbackReady = '1';
+
+    const feedback = document.createElement('div');
+    feedback.className = 'ai-feedback';
+    feedback.innerHTML = `
+      <div class="ai-feedback-actions" aria-label="Évaluer la réponse">
+        <button type="button" data-rating="up" aria-label="Très bien" title="Très bien">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v11H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3Z"/><path d="M7 10l5-8c1.5 0 2.5 1 2 3l-1 5h6a2 2 0 0 1 2 2l-1 7a2 2 0 0 1-2 2H7"/></svg>
+          <span>Très bien</span>
+        </button>
+        <button type="button" data-rating="down" aria-label="Naze" title="Naze">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14V3H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3Z"/><path d="M7 14l5 8c1.5 0 2.5-1 2-3l-1-5h6a2 2 0 0 0 2-2l-1-7a2 2 0 0 0-2-2H7"/></svg>
+          <span>Naze</span>
+        </button>
+      </div>
+      <div class="ai-disclaimer">Vérifiez les réponses d’Infinity, car l’IA peut faire des erreurs.</div>
+      <div class="feedback-status" aria-live="polite"></div>`;
+    wrapper.appendChild(feedback);
+
+    feedback.querySelectorAll('button[data-rating]').forEach(button => {
+      button.addEventListener('click', async () => {
+        if (feedback.dataset.sent === '1') return;
+        const rating = button.dataset.rating;
+        const status = feedback.querySelector('.feedback-status');
+        feedback.querySelectorAll('button').forEach(b => b.disabled = true);
+        button.classList.add('selected');
+        status.textContent = 'Envoi…';
+        const answer = (messageEl.innerText || messageEl.textContent || '').trim().slice(0, 5000);
+        const promptWrapper = wrapper.previousElementSibling;
+        const prompt = (promptWrapper?.querySelector('.msg')?.innerText || promptWrapper?.querySelector('.msg')?.textContent || '').trim().slice(0, 2000) || '(question précédente non disponible)';
+        try {
+          await sendInfinityFeedback({
+            type: 'rating',
+            rating,
+            question: prompt,
+            response: answer,
+            answer,
+            userName: googleUser?.name || (googleUser ? 'Utilisateur connecté' : 'Invité'),
+            userEmail: googleUser?.email || '',
+            timestamp: new Date().toISOString(),
+            page: location.href,
+            appVersion: 'Infinity'
+          });
+          feedback.dataset.sent = '1';
+          status.textContent = 'Merci pour votre avis !';
+        } catch (error) {
+          console.error('Erreur cotation Infinity :', error);
+          status.textContent = /not configured|pas configuré|503/i.test(error.message)
+            ? 'Le service e-mail du serveur n’est pas configuré. Vérifie la configuration de /api/feedback sur Vercel.'
+            : `Échec de l’envoi (${error.message || 'erreur réseau'}). Réessaie plus tard.`;
+          feedback.querySelectorAll('button').forEach(b => b.disabled = false);
+          button.classList.remove('selected');
+        }
+      });
+    });
+  });
+}
+const infinityFeedbackObserver = new MutationObserver(() => addInfinityFeedbackToReplies());
+if (document.getElementById('chat')) {
+  infinityFeedbackObserver.observe(document.getElementById('chat'), { childList: true, subtree: true });
+  document.addEventListener('DOMContentLoaded', addInfinityFeedbackToReplies);
+  setTimeout(addInfinityFeedbackToReplies, 800);
+}
+
+
+</script>
+</body>
+</html>
